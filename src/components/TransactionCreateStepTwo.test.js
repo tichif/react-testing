@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import TransactionCreateStepTwo from "./TransactionCreateStepTwo";
 
 test("on initial render, the pay button is disabled", async () => {
@@ -11,4 +12,13 @@ test("on initial render, the pay button is disabled", async () => {
   // check if the screen has a button with the name of pay is enabled
   // Add async/await because Formik is used in the component
   expect(await screen.findByRole("button", { name: /pay/i })).toBeDisabled();
+});
+
+test("if an amount and note are entered, the pay button becomes enabled", async () => {
+  render(<TransactionCreateStepTwo sender={{ id: "5" }} receiver={{ id: 5 }} />);
+
+  userEvent.type(screen.getByPlaceholderText(/amount/i), "50");
+  userEvent.type(screen.getByPlaceholderText(/add a note/i), "diner");
+
+  expect(await screen.findByRole("button", { name: /pay/i })).toBeEnabled();
 });
